@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DMD Web Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0B0C10;
+  --card: #131520;
+  --card2: #1F2133;
+  --border: rgba(255,255,255,0.1);
+  --blue: #3A86FF;
+  --purple: #8338EC;
+  --cyan: #00BBF9;
+  --green: #06D6A0;
+  --pink: #FF006E;
+  --text: #e2e8f0;
+  --muted: #64748b;
+}
+*,::before,::after{box-sizing:border-box;border-width:0;border-style:solid}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;line-height:1.5;min-height:100vh}
+h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit;margin:0}
+p{margin:0}
+a{color:inherit;text-decoration:inherit}
+button{cursor:pointer;background:transparent;border:none;font-family:inherit;color:inherit}
+input{font-family:inherit;background:transparent;border:none;outline:none}
+ul,ol{list-style:none;margin:0;padding:0}
+img,svg,video{display:block;max-width:100%;height:auto}
+
+/* Typography */
+.font-black{font-weight:900}
+.font-bold{font-weight:700}
+.font-semibold{font-weight:600}
+.font-mono{font-family:'JetBrains Mono',monospace}
+.text-center{text-align:center}
+.text-left{text-align:left}
+.tracking-tight{letter-spacing:-0.025em}
+.leading-tight{line-height:1.25}
+.leading-relaxed{line-height:1.75}
+.uppercase{text-transform:uppercase}
+.whitespace-nowrap{white-space:nowrap}
+
+/* Color utilities */
+.text-white{color:#fff}
+.text-slate-200{color:#e2e8f0}
+.text-slate-300{color:#cbd5e1}
+.text-slate-400{color:#94a3b8}
+.text-slate-500{color:#64748b}
+.text-slate-600{color:#475569}
+.text-cyan{color:var(--cyan)}
+.text-blue{color:var(--blue)}
+.text-purple{color:var(--purple)}
+.text-pink{color:var(--pink)}
+.text-green{color:var(--green)}
+.text-gold{color:#FFD700}
+
+/* Layout */
+.fixed{position:fixed}
+.absolute{position:absolute}
+.relative{position:relative}
+.inset-0{inset:0}
+.flex{display:flex}
+.inline-flex{display:inline-flex}
+.grid{display:grid}
+.hidden{display:none}
+.contents{display:contents}
+.flex-col{flex-direction:column}
+.flex-wrap{flex-wrap:wrap}
+.items-center{align-items:center}
+.items-start{align-items:flex-start}
+.justify-center{justify-content:center}
+.justify-between{justify-content:space-between}
+.justify-end{justify-content:flex-end}
+.flex-1{flex:1 1 0%}
+.mx-auto{margin-left:auto;margin-right:auto}
+.overflow-hidden{overflow:hidden}
+.pointer-events-none{pointer-events:none}
+.cursor-pointer{cursor:pointer}
+.cursor-not-allowed{cursor:not-allowed}
+
+/* Spacing */
+.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.gap-12{gap:3rem}
+.p-1\.5{padding:.375rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}
+.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}
+.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-20{padding-top:5rem;padding-bottom:5rem}
+.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mb-12{margin-bottom:3rem}
+.mt-2{margin-top:.5rem}.mt-4{margin-top:1rem}.mt-8{margin-top:2rem}.mt-12{margin-top:3rem}
+.ml-auto{margin-left:auto}
+
+/* Sizing */
+.w-3{width:.75rem}.w-3\.5{width:.875rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-7{width:1.75rem}.w-8{width:2rem}.w-10{width:2.5rem}.w-12{width:3rem}.w-14{width:3.5rem}.w-16{width:4rem}.w-28{width:7rem}.w-32{width:8rem}.w-48{width:12rem}.w-full{width:100%}
+.h-1{height:.25rem}.h-1\.5{height:.375rem}.h-2\.5{height:.625rem}.h-3{height:.75rem}.h-3\.5{height:.875rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-8{height:2rem}.h-10{height:2.5rem}.h-12{height:3rem}.h-14{height:3.5rem}.h-20{height:5rem}.h-28{height:7rem}.h-32{height:8rem}.h-full{height:100%}
+.min-h-screen{min-height:100vh}
+.max-w-sm{max-width:24rem}.max-w-md{max-width:28rem}.max-w-lg{max-width:32rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-5xl{max-width:64rem}
+
+/* Borders & Radius */
+.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}
+.border{border-width:1px;border-style:solid;border-color:var(--border)}
+.border-2{border-width:2px;border-style:solid;border-color:var(--border)}
+.border-dashed{border-style:dashed}
+.border-t{border-top-width:1px;border-top-style:solid;border-top-color:rgba(255,255,255,.05)}
+
+/* Text sizes */
+.text-\[9px\]{font-size:9px}.text-\[10px\]{font-size:10px}.text-xs{font-size:.75rem}.text-sm{font-size:.875rem}.text-base{font-size:1rem}.text-lg{font-size:1.125rem}.text-xl{font-size:1.25rem}.text-2xl{font-size:1.5rem}.text-3xl{font-size:1.875rem}.text-4xl{font-size:2.25rem}.text-5xl{font-size:3rem}.text-6xl{font-size:3.75rem}
+
+/* Z-index */
+.z-50{z-index:50}.z-10{z-index:10}
+
+/* Positions */
+.top-0{top:0}.left-0{left:0}.right-0{right:0}.bottom-0{bottom:0}
+.top-1\/2{top:50%}.left-1\/2{left:50%}
+.top-1\/4{top:25%}.bottom-1\/4{bottom:25%}.left-1\/4{left:25%}.right-1\/4{right:25%}
+.top-16{top:4rem}
+.-translate-x-1\/2{transform:translateX(-50%)}..-translate-y-1\/2{transform:translateY(-50%)}
+.bottom-8{bottom:2rem}
+.inset-x-0{left:0;right:0}
+.pt-14{padding-top:3.5rem}
+
+/* Glass card */
+.glass-card {
+  background: rgba(19,21,32,0.8);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--blue), var(--purple), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Fact card */
+.fact-card {
+  background: linear-gradient(135deg, rgba(58,134,255,0.08), rgba(131,56,236,0.08));
+  border: 1px solid rgba(58,134,255,0.2);
+  border-radius: 1rem;
+  padding: 1rem 1.5rem;
+}
+
+/* 3D button */
+.btn-3d {
+  position: relative;
+  transform: translateY(0);
+  box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.btn-3d:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.4);
+}
+.btn-3d:hover { filter: brightness(1.1); }
+
+/* Evidence board */
+.evidence-board {
+  background: rgba(10,10,20,0.6);
+  border: 1px dashed rgba(255,255,255,0.15);
+  border-radius: 1rem;
+  min-height: 260px;
+}
+
+/* Slot mask for spinner */
+.slot-mask {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+}
+
+/* Section glow */
+.section-glow {
+  position: relative;
+}
+.section-glow::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 200px;
+  background: radial-gradient(ellipse, rgba(58,134,255,0.04), transparent 70%);
+  pointer-events: none;
+}
+
+/* HUD header */
+#hud {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  padding: .625rem 1rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(11,12,16,0.85);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Animations */
+@keyframes float {
+  0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)}
+}
+@keyframes pulse-ring {
+  0%{opacity:.6;transform:scale(1)} 100%{opacity:0;transform:scale(1.6)}
+}
+@keyframes bounce-in {
+  0%{transform:scale(0.7);opacity:0} 60%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1}
+}
+@keyframes countup {
+  from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none}
+}
+@keyframes confetti-fall {
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0}
+}
+@keyframes spin-reel {
+  from{transform:translateY(0)} to{transform:translateY(calc(-100% + 48px))}
+}
+@keyframes chevron-bounce {
+  0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)}
+}
+
+.float-anim { animation: float 3s ease-in-out infinite; }
+.bounce-in { animation: bounce-in 0.5s ease forwards; }
+.chevron-bounce { animation: chevron-bounce 1.5s ease-in-out infinite; }
+
+/* Fade-in on scroll (IntersectionObserver) */
+.fade-up { opacity:0; transform:translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-up.visible { opacity:1; transform:none; }
+
+/* Flip card */
+.flip-inner {
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+}
+.flip-inner.flipped { transform: rotateY(180deg); }
+.face-front, .face-back {
+  position:absolute; inset:0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius:1rem;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1rem;
+}
+.face-back { transform: rotateY(180deg); }
+
+/* Punnett table */
+.punnett td, .punnett th {
+  width:70px; height:60px; text-align:center; font-weight:bold; font-size:.9rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: .5rem;
+}
+
+/* Grid presets */
+.grid-cols-2{grid-template-columns:repeat(2,1fr)}
+.grid-cols-3{grid-template-columns:repeat(3,1fr)}
+
+/* Responsive */
+@media(min-width:640px){
+  .sm\:text-xl{font-size:1.25rem}
+  .sm\:text-4xl{font-size:2.25rem}
+  .sm\:text-5xl{font-size:3rem}
+  .sm\:grid-cols-2{grid-template-columns:repeat(2,1fr)}
+  .sm\:inline{display:inline}
+  .sm\:p-8{padding:2rem}
+}
+@media(min-width:768px){
+  .md\:grid-cols-2{grid-template-columns:repeat(2,1fr)}
+  .md\:flex{display:flex}
+  .md\:hidden{display:none}
+}
+@media(min-width:1024px){
+  .lg\:grid-cols-2{grid-template-columns:repeat(2,1fr)}
+  .lg\:text-6xl{font-size:3.75rem}
+}
+
+/* Misc */
+.opacity-0{opacity:0}
+.opacity-60{opacity:.6}
+.space-y-3 > * + * { margin-top:.75rem }
+.space-y-1\.5 > * + * { margin-top:.375rem }
+.transition-all{transition:all .2s}
+.transition-colors{transition:color .2s, background-color .2s, border-color .2s}
+.w-\[1px\]{width:1px}
+.tracking-\[0\.25em\]{letter-spacing:.25em}
+.tracking-\[0\.2em\]{letter-spacing:.2em}
+.tracking-\[0\.15em\]{letter-spacing:.15em}
+.tracking-wider{letter-spacing:.05em}
+
+input[type=text]:focus { border-color: var(--blue) !important; }
+</style>
+</head>
+<body>
+
+<!-- ===== HUD ===== -->
+<header id="hud">
+  <div class="max-w-5xl mx-auto flex items-center justify-between gap-3">
+    <!-- Health bar -->
+    <div class="flex items-center gap-2 flex-1" style="max-width:180px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF006E" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+      <div class="flex-1 h-2\.5 rounded-full overflow-hidden" style="background:#1F2133">
+        <div id="health-bar" class="h-full rounded-full" style="background:linear-gradient(90deg,#06D6A0,#3A86FF);width:100%;transition:width .5s"></div>
+      </div>
+      <span id="health-num" class="text-\[10px\] text-slate-500 font-mono w-7">100</span>
+    </div>
+    <!-- XP -->
+    <div class="flex items-center gap-1\.5 px-3 py-1 rounded-full border" style="background:#1F2133">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00BBF9" stroke-width="2"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+      <span id="xp-display" class="text-xs font-bold text-white font-mono">0 XP</span>
+    </div>
+    <!-- Level -->
+    <div id="level-badge" class="flex items-center gap-1\.5 px-3 py-1 rounded-full border" style="background:linear-gradient(135deg,rgba(58,134,255,0.15),rgba(131,56,236,0.15));border-color:rgba(131,56,236,0.3)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8338EC" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+      <span id="level-text" class="text-xs font-bold text-white">Lv.1</span>
+      <span id="level-name" class="text-\[10px\] text-slate-400 sm\:inline hidden">Curious</span>
+    </div>
+    <!-- XP bar desktop -->
+    <div class="md\:flex items-center gap-2 flex-1 hidden" style="max-width:120px">
+      <div class="flex-1 h-1\.5 rounded-full overflow-hidden" style="background:#1F2133">
+        <div id="xp-bar" class="h-full rounded-full" style="background:linear-gradient(90deg,#3A86FF,#8338EC);width:0%;transition:width .5s"></div>
+      </div>
+      <span id="next-level-text" class="text-\[9px\] text-slate-500">Lv.2</span>
+    </div>
+    <!-- Reset -->
+    <button onclick="resetGame()" class="p-1\.5 rounded-lg transition-colors" style="hover:background:#1F2133" title="Reset Game">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="pt-14">
+
+<!-- ===== SECTION 0: HOOK ===== -->
+<section id="section-hook" style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:5rem 1rem;overflow:hidden">
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+    <div style="position:absolute;top:25%;left:25%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(58,134,255,0.2),transparent);filter:blur(100px)"></div>
+    <div style="position:absolute;bottom:25%;right:25%;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(131,56,236,0.15),transparent);filter:blur(100px)"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(0,187,249,0.1),transparent);filter:blur(80px)"></div>
+  </div>
+  <div class="relative z-10 text-center max-w-3xl mx-auto">
+    <p class="text-xs font-bold uppercase tracking-\[0\.25em\] text-cyan mb-6">An Interactive Science Adventure</p>
+    <h1 class="font-black tracking-tight leading-tight mb-6" style="font-size:clamp(2rem,5vw,3.75rem)">
+      <span class="gradient-text">A boy learns to walk...</span><br>
+      <span class="text-white">then slowly forgets how.</span>
+    </h1>
+    <p class="text-lg text-slate-300 mb-4 leading-relaxed sm\:text-xl">Can <span class="text-blue font-bold">YOU</span> help science save him?</p>
+    <!-- Character SVG -->
+    <div id="hero-char" class="w-28 h-28 mx-auto my-8 float-anim">
+      <svg viewBox="0 0 100 120" class="w-full h-full">
+        <circle cx="50" cy="18" r="12" fill="#00BBF9"/>
+        <line x1="50" y1="30" x2="50" y2="65" stroke="#00BBF9" stroke-width="4" stroke-linecap="round"/>
+        <line x1="50" y1="40" x2="25" y2="55" stroke="#00BBF9" stroke-width="3" stroke-linecap="round"/>
+        <line x1="50" y1="40" x2="75" y2="50" stroke="#00BBF9" stroke-width="3" stroke-linecap="round"/>
+        <line x1="50" y1="65" x2="30" y2="95" stroke="#00BBF9" stroke-width="3" stroke-linecap="round"/>
+        <line x1="50" y1="65" x2="70" y2="95" stroke="#00BBF9" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="fact-card inline-block mb-8">
+      <p class="text-sm font-semibold text-slate-300">DMD affects <span class="text-pink font-bold">1 in 4,000</span> boys. No full cure exists yet.</p>
+    </div>
+    <div>
+      <button onclick="document.getElementById('section-dmd').scrollIntoView({behavior:'smooth'});addXP(10,'Started your mission!')" class="btn-3d px-10 py-4 rounded-2xl text-lg font-bold text-white" style="background:linear-gradient(90deg,#3A86FF,#8338EC)">Start My Mission</button>
+    </div>
+  </div>
+  <div class="chevron-bounce" style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+  </div>
+</section>
+
+<div class="flex justify-center py-4"><div class="w-48 w-\[1px\]" style="height:1px;background:linear-gradient(90deg,transparent,#3A86FF,#8338EC,transparent)"></div></div>
+
+<!-- ===== SECTION 1: WHAT IS DMD ===== -->
+<section id="section-dmd" class="py-20 px-4 section-glow">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-12 fade-up">
+      <p class="text-xs font-bold uppercase tracking-\[0\.2em\] text-blue mb-3">Part 1</p>
+      <h2 class="text-3xl font-bold text-white mb-3 sm\:text-4xl">What is DMD?</h2>
+      <p class="text-base text-slate-400">Click each muscle to see when it stops working</p>
+    </div>
+    <div class="grid gap-12 items-center lg\:grid-cols-2">
+      <!-- Body outline interactive -->
+      <div class="relative mx-auto fade-up" style="width:280px;height:400px">
+        <svg viewBox="0 0 100 130" class="w-full h-full" id="body-svg">
+          <circle cx="50" cy="14" r="10" fill="none" stroke="#475569" stroke-width="1.5"/>
+          <line x1="50" y1="24" x2="50" y2="30" stroke="#475569" stroke-width="1.5"/>
+          <path d="M35 30 L65 30 L62 65 L38 65 Z" fill="none" stroke="#475569" stroke-width="1.5"/>
+          <path d="M35 30 L20 50 L15 65" fill="none" stroke="#475569" stroke-width="1.5"/>
+          <path d="M65 30 L80 50 L85 65" fill="none" stroke="#475569" stroke-width="1.5"/>
+          <path d="M42 65 L35 95 L30 115" fill="none" stroke="#475569" stroke-width="1.5"/>
+          <path d="M58 65 L65 95 L70 115" fill="none" stroke="#475569" stroke-width="1.5"/>
+          <!-- Clickable muscle dots -->
+          <g class="muscle-dot" data-id="0" data-name="Calf Muscles" data-age="8" data-info="Calf muscles weaken first, causing toe-walking and frequent falls around age 3-5." style="cursor:pointer">
+            <circle cx="50" cy="100" r="5" fill="#1F2133" stroke="#3A86FF" stroke-width="1.5"/>
+            <circle cx="50" cy="100" r="8" fill="none" stroke="#3A86FF" stroke-width="0.5" opacity="0.5" class="pulse-ring"/>
+          </g>
+          <g class="muscle-dot" data-id="1" data-name="Thigh Muscles" data-age="10" data-info="Quadricep and hamstring weakness leads to difficulty climbing stairs and rising from a chair." style="cursor:pointer">
+            <circle cx="50" cy="78" r="5" fill="#1F2133" stroke="#3A86FF" stroke-width="1.5"/>
+            <circle cx="50" cy="78" r="8" fill="none" stroke="#3A86FF" stroke-width="0.5" opacity="0.5"/>
+          </g>
+          <g class="muscle-dot" data-id="2" data-name="Hip Muscles" data-age="12" data-info="Hip girdle weakness triggers Gower's sign — using hands to 'walk up' the legs to stand." style="cursor:pointer">
+            <circle cx="50" cy="58" r="5" fill="#1F2133" stroke="#3A86FF" stroke-width="1.5"/>
+            <circle cx="50" cy="58" r="8" fill="none" stroke="#3A86FF" stroke-width="0.5" opacity="0.5"/>
+          </g>
+          <g class="muscle-dot" data-id="3" data-name="Back Muscles" data-age="14" data-info="Thoracic paraspinal weakening causes scoliosis (spine curvature) in most DMD patients by the early teens." style="cursor:pointer">
+            <circle cx="30" cy="42" r="5" fill="#1F2133" stroke="#3A86FF" stroke-width="1.5"/>
+            <circle cx="30" cy="42" r="8" fill="none" stroke="#3A86FF" stroke-width="0.5" opacity="0.5"/>
+          </g>
+          <g class="muscle-dot" data-id="4" data-name="Chest Muscles" data-age="16" data-info="Weakening of intercostal muscles reduces respiratory function, requiring ventilator support." style="cursor:pointer">
+            <circle cx="50" cy="40" r="5" fill="#1F2133" stroke="#3A86FF" stroke-width="1.5"/>
+            <circle cx="50" cy="40" r="8" fill="none" stroke="#3A86FF" stroke-width="0.5" opacity="0.5"/>
+          </g>
+          <g class="muscle-dot" data-id="5" data-name="Heart Muscle" data-age="20" data-info="Dilated cardiomyopathy (weakened heart) affects almost all DMD patients by their 20s and is the leading cause of death." style="cursor:pointer">
+            <circle cx="55" cy="35" r="5" fill="#1F2133" stroke="#FF006E" stroke-width="1.5"/>
+            <circle cx="55" cy="35" r="8" fill="none" stroke="#FF006E" stroke-width="0.5" opacity="0.5"/>
+          </g>
+        </svg>
+        <p class="text-center text-xs text-slate-500 mt-2"><span id="muscles-explored">0</span>/6 muscles explored</p>
+        <!-- Popup tooltip -->
+        <div id="muscle-popup" style="display:none;position:absolute;background:rgba(19,21,32,0.97);border:1px solid rgba(58,134,255,0.4);border-radius:.75rem;padding:.75rem 1rem;max-width:220px;z-index:20;box-shadow:0 0 20px rgba(58,134,255,0.2)">
+          <p id="muscle-popup-name" class="text-sm font-bold text-white mb-1"></p>
+          <p id="muscle-popup-age" class="text-xs text-cyan font-bold mb-1"></p>
+          <p id="muscle-popup-info" class="text-xs text-slate-300 leading-relaxed"></p>
+        </div>
+      </div>
+      <!-- Stat flip cards -->
+      <div class="grid gap-4 fade-up">
+        <!-- Card 1 -->
+        <div class="relative cursor-pointer" style="perspective:600px;height:160px" onclick="flipCard(this)">
+          <div class="flip-inner absolute inset-0">
+            <div class="face-front glass-card">
+              <p class="text-xs font-bold uppercase tracking-\[0\.15em\] text-slate-400 mb-3">First Symptoms</p>
+              <p class="text-5xl font-black text-cyan" id="count-1">3</p>
+              <p class="text-sm text-slate-400 mt-2">years old</p>
+            </div>
+            <div class="face-back" style="background:linear-gradient(135deg,rgba(0,187,249,0.15),rgba(0,187,249,0.08))">
+              <p class="text-sm text-center text-slate-200 leading-relaxed">Boys with DMD typically show first signs by age 3 — trouble running, climbing stairs, or getting up from the floor.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="relative cursor-pointer" style="perspective:600px;height:160px" onclick="flipCard(this)">
+          <div class="flip-inner absolute inset-0">
+            <div class="face-front glass-card">
+              <p class="text-xs font-bold uppercase tracking-\[0\.15em\] text-slate-400 mb-3">Wheelchair Age</p>
+              <p class="text-5xl font-black text-purple" id="count-2">12</p>
+              <p class="text-sm text-slate-400 mt-2">years old</p>
+            </div>
+            <div class="face-back" style="background:linear-gradient(135deg,rgba(131,56,236,0.15),rgba(131,56,236,0.08))">
+              <p class="text-sm text-center text-slate-200 leading-relaxed">Progressive muscle loss means most boys need a wheelchair by age 12. Leg muscles weaken first.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="relative cursor-pointer" style="perspective:600px;height:160px" onclick="flipCard(this)">
+          <div class="flip-inner absolute inset-0">
+            <div class="face-front glass-card">
+              <p class="text-xs font-bold uppercase tracking-\[0\.15em\] text-slate-400 mb-3">Avg. Lifespan</p>
+              <p class="text-5xl font-black text-pink" id="count-3">26</p>
+              <p class="text-sm text-slate-400 mt-2">years</p>
+            </div>
+            <div class="face-back" style="background:linear-gradient(135deg,rgba(255,0,110,0.15),rgba(255,0,110,0.08))">
+              <p class="text-sm text-center text-slate-200 leading-relaxed">Without treatment, average life expectancy is mid-20s. New therapies are extending this significantly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fact-card mt-12 max-w-lg mx-auto text-center fade-up">
+      <p class="text-xs uppercase tracking-wider text-blue font-bold mb-1">Key Fact</p>
+      <p class="text-sm text-slate-300">DMD is caused by mutations in the <span class="text-purple font-bold">dystrophin gene</span> — the largest gene in the human body with 79 exons.</p>
+    </div>
+  </div>
+</section>
+
+<div class="flex justify-center py-4"><div style="width:12rem;height:1px;background:linear-gradient(90deg,transparent,#3A86FF,#8338EC,transparent)"></div></div>
+
+<!-- ===== SECTION 2: GENE PUZZLE ===== -->
+<section id="section-gene" class="py-20 px-4 section-glow">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12 fade-up">
+      <p class="text-xs font-bold uppercase tracking-\[0\.2em\] text-purple mb-3">Part 2</p>
+      <h2 class="text-3xl font-bold text-white mb-3 sm\:text-4xl">Find the Broken Gene!</h2>
+      <p class="text-base text-slate-400">The DMD gene lives on the X chromosome. Can you spot the damaged exons?</p>
+    </div>
+    <!-- Chromosomes -->
+    <div class="flex justify-center gap-8 mb-8 fade-up">
+      <button id="x-chrom-btn" onclick="examineXChromosome()" class="glass-card p-8 rounded-2xl cursor-pointer text-center transition-all" style="border-color:rgba(58,134,255,0.3)">
+        <svg viewBox="0 0 60 80" style="width:4rem;height:5rem;margin:0 auto 0.75rem">
+          <path d="M15 5 L45 75 M45 5 L15 75" stroke="#3A86FF" stroke-width="8" stroke-linecap="round" fill="none"/>
+          <circle cx="30" cy="40" r="8" fill="#3A86FF" opacity="0.3"/>
+        </svg>
+        <p class="text-lg font-bold text-blue">X Chromosome</p>
+        <p class="text-xs text-slate-400">Click to examine</p>
+      </button>
+      <div class="glass-card p-8 rounded-2xl text-center opacity-60">
+        <svg viewBox="0 0 60 80" style="width:4rem;height:5rem;margin:0 auto 0.75rem">
+          <line x1="30" y1="5" x2="30" y2="75" stroke="#06D6A0" stroke-width="8" stroke-linecap="round"/>
+          <line x1="30" y1="25" x2="45" y2="5" stroke="#06D6A0" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <p class="text-lg font-bold text-green">Y Chromosome</p>
+        <p class="text-xs text-slate-400">No DMD gene here</p>
+      </div>
+    </div>
+    <!-- Exon strip (shown after clicking X) -->
+    <div id="exon-strip" style="display:none" class="fade-up mb-8">
+      <p class="text-center text-sm text-slate-400 mb-4">Click the <span class="text-pink font-bold">damaged exons</span> to find them!</p>
+      <div id="exon-grid" class="flex flex-wrap justify-center gap-2 max-w-2xl mx-auto"></div>
+      <p id="exon-result" class="text-center text-sm mt-4 text-slate-500"></p>
+    </div>
+    <!-- Punnett square button -->
+    <div class="text-center mb-6 fade-up" id="punnett-btn-wrap">
+      <button onclick="showPunnett()" class="btn-3d px-6 py-3 rounded-xl font-bold text-white" style="background:linear-gradient(90deg,#8338EC,#3A86FF)">Mom is a Carrier — Show Inheritance</button>
+    </div>
+    <!-- Punnett square -->
+    <div id="punnett-section" style="display:none" class="max-w-md mx-auto glass-card p-6 rounded-2xl mb-8 fade-up">
+      <p class="text-center text-sm font-bold text-white mb-4">Punnett Square — X-linked Recessive Inheritance</p>
+      <table class="punnett mx-auto" style="border-collapse:separate;border-spacing:4px">
+        <tr>
+          <th style="background:transparent;border:none"></th>
+          <th style="color:#06D6A0;background:rgba(6,214,160,0.1)">X (Dad)</th>
+          <th style="color:#06D6A0;background:rgba(6,214,160,0.1)">Y (Dad)</th>
+        </tr>
+        <tr>
+          <th style="color:#3A86FF;background:rgba(58,134,255,0.1)">X (Mom)</th>
+          <td style="background:rgba(6,214,160,0.1);color:#06D6A0">XX<br><span style="font-size:10px;color:#94a3b8">Normal girl</span></td>
+          <td style="background:rgba(6,214,160,0.1);color:#06D6A0">XY<br><span style="font-size:10px;color:#94a3b8">Normal boy</span></td>
+        </tr>
+        <tr>
+          <th style="color:#FF006E;background:rgba(255,0,110,0.1)">X̲ (Mom carrier)</th>
+          <td style="background:rgba(131,56,236,0.1);color:#8338EC">X̲X<br><span style="font-size:10px;color:#94a3b8">Carrier girl</span></td>
+          <td style="background:rgba(255,0,110,0.15);color:#FF006E">X̲Y<br><span style="font-size:10px;color:#94a3b8">DMD boy 😔</span></td>
+        </tr>
+      </table>
+      <p class="text-center text-xs text-slate-400 mt-4">50% chance each son is affected. Daughters carry but usually aren't affected.</p>
+    </div>
+    <div class="fact-card max-w-lg mx-auto text-center fade-up">
+      <p class="text-xs uppercase tracking-wider text-purple font-bold mb-1">Key Fact</p>
+      <p class="text-sm text-slate-300">DMD is <span class="text-pink font-bold">X-linked recessive</span> — it mainly affects boys because they only have one X chromosome.</p>
+    </div>
+  </div>
+</section>
+
+<div class="flex justify-center py-4"><div style="width:12rem;height:1px;background:linear-gradient(90deg,transparent,#3A86FF,#8338EC,transparent)"></div></div>
+
+<!-- ===== SECTION 3: DIAGNOSIS DETECTIVE ===== -->
+<section id="section-diagnosis" class="py-20 px-4 section-glow">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12 fade-up">
+      <p class="text-xs font-bold uppercase tracking-\[0\.2em\] text-green mb-3">Part 3</p>
+      <h2 class="text-3xl font-bold text-white mb-3 sm\:text-4xl">Diagnosis Detective</h2>
+      <p class="text-base text-slate-400">You're the doctor. Pick the 3 correct clues to diagnose DMD.</p>
+    </div>
+    <!-- Patient card -->
+    <div class="glass-card p-5 rounded-2xl mb-8 max-w-sm mx-auto fade-up">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,rgba(58,134,255,0.4),rgba(131,56,236,0.4))">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20 C4 16 8 14 12 14 C16 14 20 16 20 20"/></svg>
+        </div>
+        <div>
+          <p class="font-bold text-white">Patient: Alex, Age 5</p>
+          <p class="text-xs text-slate-400">Difficulty running, falls frequently</p>
+        </div>
+      </div>
+    </div>
+    <div class="grid md\:grid-cols-2 gap-8">
+      <!-- Clues -->
+      <div>
+        <p class="text-sm font-bold text-slate-400 mb-4 flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          Available Clues
+        </p>
+        <div id="clue-list" class="grid gap-3"></div>
+      </div>
+      <!-- Evidence board -->
+      <div>
+        <p class="text-sm font-bold text-slate-400 mb-4 flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+          Evidence Board (<span id="evidence-count">0</span>/3)
+        </p>
+        <div class="evidence-board p-6" id="evidence-board">
+          <p class="text-sm text-slate-500 text-center mt-8" id="evidence-placeholder">Click correct clues to add them here</p>
+          <div id="evidence-items" class="space-y-3"></div>
+        </div>
+      </div>
+    </div>
+    <div id="diagnosis-result" style="display:none" class="fact-card max-w-lg mx-auto text-center mt-8 bounce-in">
+      <p class="text-xs uppercase tracking-wider text-green font-bold mb-1">🎉 Correct Diagnosis!</p>
+      <p class="text-sm text-slate-300">You've correctly identified the 3 key DMD indicators. +50 XP awarded!</p>
+    </div>
+    <div class="fact-card max-w-lg mx-auto text-center mt-12 fade-up">
+      <p class="text-xs uppercase tracking-wider text-green font-bold mb-1">Key Fact</p>
+      <p class="text-sm text-slate-300"><span class="text-white font-bold">Gower's sign</span> is a classic DMD indicator — boys use their hands to "walk up" their legs to stand, compensating for weak hip muscles.</p>
+    </div>
+  </div>
+</section>
+
+<div class="flex justify-center py-4"><div style="width:12rem;height:1px;background:linear-gradient(90deg,transparent,#3A86FF,#8338EC,transparent)"></div></div>
+
+<!-- ===== SECTION 4: TREATMENT SPINNER ===== -->
+<section id="section-treatment" class="py-20 px-4 section-glow">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-12 fade-up">
+      <p class="text-xs font-bold uppercase tracking-\[0\.2em\] text-cyan mb-3">Part 4</p>
+      <h2 class="text-3xl font-bold text-white mb-3 sm\:text-4xl">Treatment Matchmaker</h2>
+      <p class="text-base text-slate-400">Spin the wheels and learn which treatment fits which patient!</p>
+    </div>
+    <div class="glass-card p-6 rounded-2xl fade-up">
+      <div class="flex gap-3 mb-6">
+        <!-- Reel 1: Mutation -->
+        <div class="flex-1">
+          <p class="text-\[10px\] uppercase tracking-wider text-slate-500 font-bold mb-2 text-center">Mutation</p>
+          <div class="slot-mask rounded-xl border overflow-hidden" style="height:48px;background:#1F2133">
+            <div id="reel-mutation" style="transition:transform 0.6s cubic-bezier(.17,.67,.35,1.2)"></div>
+          </div>
+        </div>
+        <!-- Reel 2: Age -->
+        <div class="flex-1">
+          <p class="text-\[10px\] uppercase tracking-wider text-slate-500 font-bold mb-2 text-center">Patient Age</p>
+          <div class="slot-mask rounded-xl border overflow-hidden" style="height:48px;background:#1F2133">
+            <div id="reel-age" style="transition:transform 0.6s cubic-bezier(.17,.67,.35,1.2)"></div>
+          </div>
+        </div>
+        <!-- Reel 3: Treatment -->
+        <div class="flex-1">
+          <p class="text-\[10px\] uppercase tracking-wider text-slate-500 font-bold mb-2 text-center">Treatment</p>
+          <div class="slot-mask rounded-xl border overflow-hidden" style="height:48px;background:#1F2133">
+            <div id="reel-treatment" style="transition:transform 0.6s cubic-bezier(.17,.67,.35,1.2)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mb-4">
+        <button id="spin-btn" onclick="doSpin()" class="btn-3d px-8 py-3 rounded-xl font-bold text-white inline-flex items-center gap-2" style="background:linear-gradient(90deg,#00BBF9,#3A86FF)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          Spin (<span id="spin-count">0</span>/5)
+        </button>
+      </div>
+      <div id="spin-result" style="display:none;margin-top:1rem" class="glass-card p-4 rounded-xl text-center bounce-in">
+        <p id="spin-result-text" class="text-sm text-slate-200"></p>
+      </div>
+    </div>
+    <div class="fact-card max-w-lg mx-auto text-center mt-8 fade-up">
+      <p class="text-xs uppercase tracking-wider text-cyan font-bold mb-1">Key Fact</p>
+      <p class="text-sm text-slate-300"><span class="text-white font-bold">Exon skipping</span> is a molecular patch that tricks the cell into skipping over the broken exon, producing a shorter but partially functional dystrophin protein.</p>
+    </div>
+  </div>
+</section>
+
+<div class="flex justify-center py-4"><div style="width:12rem;height:1px;background:linear-gradient(90deg,transparent,#3A86FF,#8338EC,transparent)"></div></div>
+
+<!-- ===== SECTION 5: CRISPR GAME ===== -->
+<section id="section-crispr" class="py-20 px-4 section-glow">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12 fade-up">
+      <p class="text-xs font-bold uppercase tracking-\[0\.2em\] text-blue mb-3">Part 5</p>
+      <h2 class="text-3xl font-bold text-white mb-3 sm\:text-4xl">Build the CRISPR Scissors</h2>
+      <p class="text-base text-slate-400">Assemble the CRISPR system to fix the broken gene!</p>
+    </div>
+    <div class="glass-card p-6 rounded-2xl fade-up">
+      <!-- DNA strand visualization -->
+      <div class="relative mb-8">
+        <p class="text-xs text-slate-500 text-center mb-4">Broken DNA Strand</p>
+        <svg viewBox="0 0 600 80" class="w-full h-20" id="dna-svg">
+          <path d="M0 20 Q75 20 150 40 Q225 60 300 60" stroke="#3A86FF" stroke-width="3" fill="none" opacity="0.6"/>
+          <path d="M0 60 Q75 60 150 40 Q225 20 300 20" stroke="#8338EC" stroke-width="3" fill="none" opacity="0.6"/>
+          <rect x="260" y="15" width="80" height="50" rx="8" fill="#FF006E" opacity="0.15" stroke="#FF006E" stroke-width="1" stroke-dasharray="4"/>
+          <text x="300" y="44" text-anchor="middle" fill="#FF006E" font-size="10" font-weight="bold">MUTATION</text>
+          <path d="M300 60 Q375 60 450 40 Q525 20 600 20" stroke="#3A86FF" stroke-width="3" fill="none" opacity="0.6"/>
+          <path d="M300 20 Q375 20 450 40 Q525 60 600 60" stroke="#8338EC" stroke-width="3" fill="none" opacity="0.6"/>
+          <!-- Base pair lines -->
+          <line x1="75" y1="25" x2="75" y2="55" stroke="#1F2133" stroke-width="2"/>
+          <line x1="150" y1="25" x2="150" y2="55" stroke="#1F2133" stroke-width="2"/>
+          <line x1="450" y1="25" x2="450" y2="55" stroke="#1F2133" stroke-width="2"/>
+          <line x1="525" y1="25" x2="525" y2="55" stroke="#1F2133" stroke-width="2"/>
+          <!-- Fixed DNA (shown after assembly) -->
+          <path id="dna-fixed" d="M250 20 Q275 40 300 40 Q325 40 350 20" stroke="#06D6A0" stroke-width="3" fill="none" opacity="0" style="transition:opacity .5s"/>
+        </svg>
+      </div>
+      <!-- Slots -->
+      <div id="crispr-slots" class="grid grid-cols-3 gap-4 mb-8"></div>
+      <!-- Pieces -->
+      <div>
+        <p class="text-xs text-slate-500 mb-3 text-center">Click a component, then click its slot above</p>
+        <div class="flex flex-wrap justify-center gap-3" id="crispr-pieces"></div>
+      </div>
+      <div id="crispr-result" style="display:none;margin-top:1rem" class="glass-card p-4 rounded-xl text-center bounce-in">
+        <p class="text-green font-bold text-sm">🎉 CRISPR system assembled! The gene is being repaired... +40 XP!</p>
+      </div>
+    </div>
+    <div class="fact-card max-w-lg mx-auto text-center mt-8 fade-up">
+      <p class="text-xs uppercase tracking-wider text-blue font-bold mb-1">Key Fact</p>
+      <p class="text-sm text-slate-300"><span class="text-white font-bold">CRISPR-Cas9</span> works like molecular scissors guided by a GPS (guide RNA) to allow scientists to edit genes. It's being tested for DMD treatment.</p>
+    </div>
+  </div>
+</section>
+
+<div class="flex justify-center py-4"><div style="width:12rem;height:1px;background:linear-gradient(90deg,transparent,#3A86FF,#8338EC,transparent)"></div></div>
+
+<!-- ===== SECTION 6: AI PREDICTION ===== -->
+<section id="section-prediction" class="py-20 px-4 section-glow">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12 fade-up">
+      <p class="text-xs font-bold uppercase tracking-\[0\.2em\] text-purple mb-3">Part 6</p>
+      <h2 class="text-3xl font-bold text-white mb-3 sm\:text-4xl">AI Prediction Challenge</h2>
+      <p class="text-base text-slate-400">Who will walk longer? Test your clinical intuition!</p>
+    </div>
+    <!-- Scores -->
+    <div class="flex justify-center gap-6 mb-8 fade-up">
+      <div class="glass-card px-5 py-3 rounded-xl text-center">
+        <p class="text-xs text-slate-500">Your Score</p>
+        <p class="text-2xl font-black text-blue"><span id="ai-player-score">0</span>/<span id="ai-player-total">0</span></p>
+      </div>
+      <div class="flex items-center"><span class="text-sm font-bold text-slate-500">VS</span></div>
+      <div class="glass-card px-5 py-3 rounded-xl text-center">
+        <p class="text-xs text-slate-500 flex items-center gap-1 justify-center">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/></svg>
+          AI Score
+        </p>
+        <p class="text-2xl font-black text-purple"><span id="ai-ai-score">0</span>/<span id="ai-ai-total">0</span></p>
+        <p class="text-\[9px\] text-slate-500">94% accuracy</p>
+      </div>
+    </div>
+    <!-- Question card -->
+    <div id="ai-question-card" class="glass-card p-6 rounded-2xl mb-6 fade-up"></div>
+    <div id="ai-result" style="display:none" class="fact-card max-w-lg mx-auto text-center mb-6 bounce-in">
+      <p id="ai-result-text" class="text-sm font-bold"></p>
+    </div>
+    <div class="fact-card max-w-lg mx-auto text-center fade-up">
+      <p class="text-xs uppercase tracking-wider text-purple font-bold mb-1">Key Fact</p>
+      <p class="text-sm text-slate-300">AI and machine learning are being used to <span class="text-white font-bold">predict disease progression</span> in DMD patients, helping doctors choose the best treatment timing.</p>
+    </div>
+  </div>
+</section>
+
+<div class="flex justify-center py-4"><div style="width:12rem;height:1px;background:linear-gradient(90deg,transparent,#3A86FF,#8338EC,transparent)"></div></div>
+
+<!-- ===== SECTION 7: BOSS BATTLE ===== -->
+<section id="section-boss" class="py-20 px-4 section-glow">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-12 fade-up">
+      <p class="text-xs font-bold uppercase tracking-\[0\.2em\] text-pink mb-3">Final Boss</p>
+      <h2 class="text-3xl font-bold text-white mb-3 sm\:text-4xl">The DMD Exam!</h2>
+      <p class="text-base text-slate-400">Defeat the boss by answering questions correctly!</p>
+    </div>
+    <!-- Boss sprite + start -->
+    <div id="boss-intro" class="text-center fade-up">
+      <div class="mb-8 float-anim">
+        <svg viewBox="0 0 120 120" class="w-32 h-32 mx-auto">
+          <path d="M20 30 Q60 10 100 30 L90 90 Q60 110 30 90 Z" fill="#FF006E" opacity="0.2" stroke="#FF006E" stroke-width="2"/>
+          <circle cx="45" cy="50" r="6" fill="#FF006E"/>
+          <circle cx="75" cy="50" r="6" fill="#FF006E"/>
+          <path d="M40 75 Q60 65 80 75" stroke="#FF006E" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M35 35 L50 40" stroke="#FF006E" stroke-width="2" stroke-linecap="round"/>
+          <path d="M85 35 L70 40" stroke="#FF006E" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <button onclick="startBattle()" class="btn-3d px-10 py-4 rounded-2xl text-lg font-bold text-white" style="background:linear-gradient(90deg,#FF006E,#C1121F)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="display:inline;margin-right:.5rem;vertical-align:middle"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" x2="19" y1="19" y2="13"/><line x1="16" x2="20" y1="16" y2="20"/><line x1="19" x2="21" y1="21" y2="19"/><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"/><line x1="5" x2="9" y1="14" y2="18"/><line x1="7" x2="4" y1="17" y2="20"/><line x1="3" x2="5" y1="19" y2="21"/></svg>
+        Begin Battle!
+      </button>
+    </div>
+    <!-- Battle arena -->
+    <div id="boss-arena" style="display:none">
+      <!-- Boss health -->
+      <div class="mb-6">
+        <div class="flex justify-between mb-2">
+          <span class="text-xs font-bold text-pink">BOSS HP</span>
+          <span id="boss-hp-text" class="text-xs font-mono text-pink">8/8</span>
+        </div>
+        <div class="rounded-full overflow-hidden" style="height:12px;background:#1F2133">
+          <div id="boss-hp-bar" class="h-full rounded-full" style="background:linear-gradient(90deg,#FF006E,#C1121F);width:100%;transition:width .5s"></div>
+        </div>
+      </div>
+      <!-- Question area -->
+      <div id="boss-question-card" class="glass-card p-6 rounded-2xl mb-6"></div>
+    </div>
+  </div>
+</section>
+
+<div class="flex justify-center py-4"><div style="width:12rem;height:1px;background:linear-gradient(90deg,transparent,#3A86FF,#8338EC,transparent)"></div></div>
+
+<!-- ===== SECTION 8: CERTIFICATE ===== -->
+<section id="section-certificate" class="py-20 px-4 section-glow">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-12 fade-up">
+      <p class="text-xs font-bold uppercase tracking-\[0\.2em\] text-gold mb-3">Mission Complete</p>
+      <h2 class="text-3xl font-bold text-white mb-3 sm\:text-4xl">Your DMD Hero Certificate</h2>
+      <p class="text-base text-slate-400">Enter your name to claim your certificate!</p>
+    </div>
+    <div class="max-w-md mx-auto glass-card p-6 rounded-2xl text-center fade-up">
+      <div class="mb-6">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" style="margin:0 auto 1rem">
+          <path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/>
+          <circle cx="12" cy="8" r="6"/>
+        </svg>
+        <p class="text-sm text-slate-400 mb-2">XP Earned: <span id="cert-xp" class="text-cyan font-bold">0</span></p>
+        <p class="text-sm text-slate-400">Level: <span id="cert-level" class="text-purple font-bold">Curious</span></p>
+      </div>
+      <input id="cert-name-input" type="text" placeholder="Enter your name..." maxlength="30"
+        class="w-full px-4 py-3 rounded-xl text-white text-center mb-4"
+        style="background:#1F2133;border:1px solid rgba(255,255,255,0.1);color:white;font-family:inherit;font-size:1rem"
+        oninput="document.getElementById('gen-cert-btn').disabled=this.value.trim().length<2">
+      <button id="gen-cert-btn" onclick="generateCertificate()" disabled
+        class="btn-3d w-full py-3 rounded-xl font-bold text-white"
+        style="background:#475569;cursor:not-allowed">
+        Generate Certificate
+      </button>
+    </div>
+    <!-- Certificate output -->
+    <div id="certificate-output" style="display:none" class="max-w-2xl mx-auto mt-8 bounce-in">
+      <div style="border:2px solid #FFD700;border-radius:1.5rem;background:linear-gradient(135deg,rgba(19,21,32,0.98),rgba(31,33,51,0.98));padding:2rem;text-align:center;position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:radial-gradient(circle at 20% 80%,rgba(58,134,255,0.06),transparent),radial-gradient(circle at 80% 20%,rgba(131,56,236,0.06),transparent);pointer-events:none"></div>
+        <p class="text-xs uppercase tracking-wider text-gold font-bold mb-2">Certificate of Achievement</p>
+        <h3 class="text-2xl font-black gradient-text mb-1" id="cert-hero-name"></h3>
+        <p class="text-sm text-slate-400 mb-4">has completed the DMD Web Analyzer mission</p>
+        <div class="flex justify-center gap-8 mb-4">
+          <div>
+            <p class="text-xs text-slate-500">XP</p>
+            <p class="text-xl font-black text-cyan" id="cert-xp-display">0</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Level</p>
+            <p class="text-xl font-black text-purple" id="cert-level-display">Curious</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Rank</p>
+            <p class="text-xl font-black text-gold">🏆 Hero</p>
+          </div>
+        </div>
+        <p class="text-xs text-slate-500">Helping science save lives, one mission at a time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="py-12 text-center border-t">
+  <p class="text-xs text-slate-500">Crack the DMD Code — An educational game about Duchenne Muscular Dystrophy</p>
+  <p class="text-\[10px\] text-slate-600 mt-2">This is an educational tool. Always consult medical professionals for health decisions.</p>
+</footer>
+
+</main>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+// =================== GAME STATE ===================
+let state = {
+  xp: 0,
+  health: 100,
+  musclesExplored: new Set(),
+  flippedCards: new Set(),
+  exonClicked: false,
+  punnettShown: false,
+  diagnosisCorrect: false,
+  evidenceBoard: [],
+  spinCount: 0,
+  selectedCrisprPiece: null,
+  crisprPlaced: {},
+  aiScenario: 0,
+  aiPlayerScore: 0,
+  aiAiScore: 0,
+  bossActive: false,
+  bossHp: 8,
+  bossAnswered: 0,
+  bossCorrect: 0,
+  bossQuestion: 0,
+};
+
+const LEVELS = [
+  {xp:0, badge:'Lv.1', name:'Curious'},
+  {xp:50, badge:'Lv.2', name:'Investigator'},
+  {xp:150, badge:'Lv.3', name:'Scientist'},
+  {xp:300, badge:'Lv.4', name:'Researcher'},
+  {xp:500, badge:'Lv.5', name:'Expert'},
+  {xp:800, badge:'Lv.6', name:'Champion'},
+  {xp:1200, badge:'Lv.7', name:'Hero'},
+];
+
+function getLevel(xp) {
+  let lv = LEVELS[0];
+  for(const l of LEVELS) { if(xp >= l.xp) lv = l; }
+  return lv;
+}
+function getNextLevel(xp) {
+  for(const l of LEVELS) { if(xp < l.xp) return l; }
+  return LEVELS[LEVELS.length-1];
+}
+
+function addXP(amount, msg='') {
+  state.xp += amount;
+  updateHUD();
+  if(msg) showToast(`+${amount} XP — ${msg}`);
+}
+
+function updateHUD() {
+  const lv = getLevel(state.xp);
+  const next = getNextLevel(state.xp);
+  document.getElementById('xp-display').textContent = state.xp + ' XP';
+  document.getElementById('level-text').textContent = lv.badge;
+  document.getElementById('level-name').textContent = lv.name;
+  document.getElementById('next-level-text').textContent = next.badge;
+  document.getElementById('health-bar').style.width = state.health + '%';
+  document.getElementById('health-num').textContent = state.health;
+  // XP progress bar
+  const prev = LEVELS.indexOf(lv) > 0 ? LEVELS[LEVELS.indexOf(lv)-1] : null;
+  const cur = prev ? lv : LEVELS[0];
+  const prevXP = prev ? cur.xp : 0;
+  const nextXP = next.xp;
+  const pct = nextXP === prevXP ? 100 : Math.min(100, ((state.xp - prevXP)/(nextXP - prevXP))*100);
+  document.getElementById('xp-bar').style.width = pct + '%';
+  // Update certificate
+  document.getElementById('cert-xp').textContent = state.xp;
+  document.getElementById('cert-level').textContent = lv.name;
+}
+
+function resetGame() {
+  if(!confirm('Reset all progress?')) return;
+  state = {xp:0,health:100,musclesExplored:new Set(),flippedCards:new Set(),exonClicked:false,punnettShown:false,diagnosisCorrect:false,evidenceBoard:[],spinCount:0,selectedCrisprPiece:null,crisprPlaced:{},aiScenario:0,aiPlayerScore:0,aiAiScore:0,bossActive:false,bossHp:8,bossAnswered:0,bossCorrect:0,bossQuestion:0};
+  updateHUD();
+  location.reload();
+}
+
+let toastTimeout;
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if(!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText='position:fixed;bottom:2rem;right:2rem;z-index:100;background:rgba(19,21,32,0.96);border:1px solid rgba(58,134,255,0.4);border-radius:.75rem;padding:.75rem 1.25rem;color:#fff;font-size:.875rem;font-weight:700;transition:opacity .3s;box-shadow:0 0 20px rgba(58,134,255,0.2)';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(()=>t.style.opacity='0', 2500);
+}
+
+// =================== SCROLL ANIMATIONS ===================
+const fadeEls = document.querySelectorAll('.fade-up');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold: 0.15});
+fadeEls.forEach(el => obs.observe(el));
+
+// =================== SECTION 1: MUSCLES ===================
+const MUSCLES = [
+  {id:0, name:'Calf Muscles', age:'~Age 3-5', info:'Calf muscles weaken first, causing toe-walking and frequent falls around age 3-5.', color:'#3A86FF'},
+  {id:1, name:'Thigh Muscles', age:'~Age 6-8', info:'Quadricep and hamstring weakness leads to difficulty climbing stairs and rising from a chair.', color:'#8338EC'},
+  {id:2, name:'Hip Muscles', age:'~Age 8-10', info:'Hip girdle weakness triggers Gower\'s sign — using hands to "walk up" the legs to stand.', color:'#00BBF9'},
+  {id:3, name:'Back Muscles', age:'~Age 10-12', info:'Thoracic paraspinal weakening causes scoliosis (spine curvature) in most DMD patients.', color:'#06D6A0'},
+  {id:4, name:'Chest Muscles', age:'~Age 14-16', info:'Weakening of intercostal muscles reduces respiratory function, requiring ventilator support.', color:'#3A86FF'},
+  {id:5, name:'Heart Muscle', age:'~Age 18-20', info:'Dilated cardiomyopathy affects almost all DMD patients by their 20s.', color:'#FF006E'},
+];
+
+const popup = document.getElementById('muscle-popup');
+document.querySelectorAll('.muscle-dot').forEach(g => {
+  g.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const id = parseInt(this.dataset.id);
+    const m = MUSCLES[id];
+    if(!state.musclesExplored.has(id)) {
+      state.musclesExplored.add(id);
+      document.getElementById('muscles-explored').textContent = state.musclesExplored.size;
+      // Light up the dot
+      const dot = this.querySelector('circle:first-child');
+      dot.setAttribute('fill', m.color);
+      dot.setAttribute('stroke', m.color);
+      if(state.musclesExplored.size === 6) addXP(30, 'All muscles explored!');
+      else addXP(5, m.name + ' explored');
+    }
+    // Show popup
+    const rect = this.getBoundingClientRect();
+    const svgRect = document.getElementById('body-svg').getBoundingClientRect();
+    popup.style.display = 'block';
+    popup.style.left = Math.min(rect.left - svgRect.left + 10, 180) + 'px';
+    popup.style.top = (rect.top - svgRect.top - 80) + 'px';
+    document.getElementById('muscle-popup-name').textContent = m.name;
+    document.getElementById('muscle-popup-age').textContent = 'Affected: ' + m.age;
+    document.getElementById('muscle-popup-info').textContent = m.info;
+  });
+});
+document.addEventListener('click', ()=>{ popup.style.display='none'; });
+
+function flipCard(el) {
+  const inner = el.querySelector('.flip-inner');
+  inner.classList.toggle('flipped');
+  const id = el.dataset.id || Array.from(el.parentElement.children).indexOf(el);
+  if(!state.flippedCards.has(id)) {
+    state.flippedCards.add(id);
+    addXP(10, 'Stat revealed!');
+  }
+}
+// Give data-id to flip cards
+document.querySelectorAll('[onclick="flipCard(this)"]').forEach((el,i)=>el.dataset.id=i);
+
+// =================== SECTION 2: GENE PUZZLE ===================
+const EXONS = Array.from({length:15},(_,i)=>({num:i+44, broken: [50,51,52].includes(i+44)}));
+
+function examineXChromosome() {
+  if(state.exonClicked) return;
+  state.exonClicked = true;
+  document.getElementById('exon-strip').style.display = 'block';
+  document.getElementById('exon-strip').classList.add('visible');
+  addXP(15, 'X chromosome examined!');
+  renderExons();
+}
+
+let exonFound = 0;
+function renderExons() {
+  const grid = document.getElementById('exon-grid');
+  grid.innerHTML = '';
+  EXONS.forEach(ex => {
+    const btn = document.createElement('button');
+    btn.className = 'rounded-lg text-xs font-bold transition-all px-3 py-2 border';
+    btn.textContent = 'Exon ' + ex.num;
+    btn.style.background = '#1F2133';
+    btn.style.color = '#94a3b8';
+    btn.style.borderColor = 'rgba(255,255,255,0.1)';
+    btn.onclick = () => {
+      if(btn.dataset.clicked) return;
+      btn.dataset.clicked = '1';
+      if(ex.broken) {
+        btn.style.background = 'rgba(255,0,110,0.2)';
+        btn.style.borderColor = '#FF006E';
+        btn.style.color = '#FF006E';
+        exonFound++;
+        addXP(15, 'Broken exon ' + ex.num + ' found!');
+        document.getElementById('exon-result').textContent = `${exonFound} broken exon${exonFound>1?'s':''} found! ${exonFound>=3?'All mutations located! 🎉':''}`;
+        if(exonFound >= 3) document.getElementById('punnett-btn-wrap').style.display='block';
+      } else {
+        btn.style.background = 'rgba(6,214,160,0.1)';
+        btn.style.borderColor = '#06D6A0';
+        btn.style.color = '#06D6A0';
+        document.getElementById('exon-result').textContent = 'Exon ' + ex.num + ' looks normal.';
+      }
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function showPunnett() {
+  document.getElementById('punnett-section').style.display = 'block';
+  document.getElementById('punnett-section').classList.add('visible');
+  addXP(20, 'Inheritance pattern revealed!');
+}
+
+// =================== SECTION 3: DIAGNOSIS ===================
+const CLUES = [
+  {id:1, text:"Gower's Sign", desc:"Uses hands to push up from floor", correct:true},
+  {id:2, text:"High CK Blood Levels", desc:"Creatine kinase 10-100x normal", correct:true},
+  {id:3, text:"Absent Dystrophin on Biopsy", desc:"Muscle biopsy shows no dystrophin", correct:true},
+  {id:4, text:"Fever & Chills", desc:"Common cold symptoms", correct:false},
+  {id:5, text:"Broken Bone (Fracture)", desc:"Injury from accident", correct:false},
+  {id:6, text:"Skin Rash", desc:"Allergic reaction", correct:false},
+];
+// Shuffle
+const shuffled = [...CLUES].sort(()=>Math.random()-.5);
+
+function renderClues() {
+  const list = document.getElementById('clue-list');
+  list.innerHTML = '';
+  shuffled.forEach(clue => {
+    const btn = document.createElement('button');
+    btn.className = 'w-full text-left p-4 rounded-xl border transition-all glass-card';
+    btn.style.borderColor = 'rgba(255,255,255,0.1)';
+    btn.id = 'clue-btn-' + clue.id;
+    btn.innerHTML = `<div class="flex items-center justify-between"><div><p class="font-bold text-white text-sm">${clue.text}</p><p class="text-xs text-slate-400">${clue.desc}</p></div><div id="clue-icon-${clue.id}"></div></div>`;
+    btn.onclick = () => clueClick(clue, btn);
+    list.appendChild(btn);
+  });
+}
+
+function clueClick(clue, btn) {
+  if(state.diagnosisCorrect) return;
+  const onBoard = state.evidenceBoard.find(c=>c.id===clue.id);
+  if(onBoard) {
+    // Remove
+    state.evidenceBoard = state.evidenceBoard.filter(c=>c.id!==clue.id);
+    btn.style.borderColor = 'rgba(255,255,255,0.1)';
+    document.getElementById('clue-icon-'+clue.id).innerHTML = '';
+    renderEvidenceBoard();
+    return;
+  }
+  if(!clue.correct) {
+    btn.style.borderColor = '#FF006E';
+    btn.style.background = 'rgba(255,0,110,0.08)';
+    setTimeout(()=>{
+      btn.style.borderColor='rgba(255,255,255,0.1)';
+      btn.style.background='';
+    }, 600);
+    state.health = Math.max(0, state.health - 10);
+    updateHUD();
+    showToast('❌ That\'s not a DMD indicator');
+    return;
+  }
+  state.evidenceBoard.push(clue);
+  btn.style.borderColor = '#06D6A0';
+  btn.style.background = 'rgba(6,214,160,0.08)';
+  document.getElementById('clue-icon-'+clue.id).innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06D6A0" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+  renderEvidenceBoard();
+  if(state.evidenceBoard.length === 3) {
+    state.diagnosisCorrect = true;
+    document.getElementById('diagnosis-result').style.display = 'block';
+    addXP(50, 'Perfect diagnosis!');
+  } else {
+    addXP(15, 'Correct clue!');
+  }
+}
+
+function renderEvidenceBoard() {
+  const items = document.getElementById('evidence-items');
+  const ph = document.getElementById('evidence-placeholder');
+  document.getElementById('evidence-count').textContent = state.evidenceBoard.filter(c=>c.correct).length;
+  if(state.evidenceBoard.length === 0) { ph.style.display='block'; items.innerHTML=''; return; }
+  ph.style.display = 'none';
+  items.innerHTML = state.evidenceBoard.map(c=>`
+    <div class="glass-card p-3 rounded-xl" style="border-color:rgba(6,214,160,0.3)">
+      <p class="font-bold text-white text-sm flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#06D6A0" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        ${c.text}
+      </p>
+      <p class="text-xs text-slate-400 ml-5">${c.desc}</p>
+    </div>`).join('');
+}
+
+renderClues();
+
+// =================== SECTION 4: TREATMENT SPINNER ===================
+const MUTATIONS = ['Exon 50 Deletion','Exon 51 Deletion','Exon 53 Deletion','Nonsense Mutation','Exon 44 Deletion','Large Deletion'];
+const AGES = ['Toddler (2-3)','Child (4-7)','Adolescent (8-14)','Teen (15-18)','Adult (18+)'];
+const TREATMENTS = ['Exon Skipping','Corticosteroids','Gene Therapy (AAV)','CRISPR (Coming Soon)','Physical Therapy'];
+
+const TREATMENT_MAP = {
+  'Exon 50 Deletion': {treat:'Exon Skipping', reason:'Exon 51 skipping restores the reading frame for Exon 50 deletions.'},
+  'Exon 51 Deletion': {treat:'Exon Skipping', reason:'FDA-approved eteplirsen targets exon 51.'},
+  'Exon 53 Deletion': {treat:'Exon Skipping', reason:'Golodirsen and viltolarsen skip exon 53.'},
+  'Nonsense Mutation': {treat:'Corticosteroids', reason:'Ataluren (for nonsense mutations) + steroids slow decline.'},
+  'Exon 44 Deletion': {treat:'Exon Skipping', reason:'Casimersen targets exon 45 to restore the frame.'},
+  'Large Deletion': {treat:'Gene Therapy (AAV)', reason:'Micro-dystrophin gene therapy delivers a smaller functional version.'},
+};
+
+function buildReel(id, items) {
+  const reel = document.getElementById(id);
+  reel.innerHTML = '';
+  const repeated = [...items,...items,...items];
+  repeated.forEach(item => {
+    const div = document.createElement('div');
+    div.style.cssText = 'height:48px;display:flex;align-items:center;justify-content:center;padding:0 .5rem';
+    div.innerHTML = `<p style="font-size:.8rem;font-weight:700;color:#fff;text-align:center;white-space:nowrap">${item}</p>`;
+    reel.appendChild(div);
+  });
+}
+buildReel('reel-mutation', MUTATIONS);
+buildReel('reel-age', AGES);
+buildReel('reel-treatment', TREATMENTS);
+
+let spinning = false;
+function doSpin() {
+  if(spinning || state.spinCount >= 5) return;
+  spinning = true;
+  state.spinCount++;
+  document.getElementById('spin-count').textContent = state.spinCount;
+  document.getElementById('spin-result').style.display = 'none';
+
+  const mutIdx = Math.floor(Math.random() * MUTATIONS.length);
+  const ageIdx = Math.floor(Math.random() * AGES.length);
+  const treatIdx = Math.floor(Math.random() * TREATMENTS.length);
+
+  const mutReel = document.getElementById('reel-mutation');
+  const ageReel = document.getElementById('reel-age');
+  const treatReel = document.getElementById('reel-treatment');
+
+  // Animate: jump to a position in the middle repeat
+  const offset = m => -(MUTATIONS.length + m) * 48;
+  mutReel.style.transition = 'transform 0.8s cubic-bezier(.17,.67,.35,1.2)';
+  ageReel.style.transition = 'transform 0.85s cubic-bezier(.17,.67,.35,1.2)';
+  treatReel.style.transition = 'transform 0.9s cubic-bezier(.17,.67,.35,1.2)';
+  mutReel.style.transform = `translateY(${-( MUTATIONS.length + mutIdx)*48}px)`;
+  ageReel.style.transform = `translateY(${-(AGES.length + ageIdx)*48}px)`;
+  treatReel.style.transform = `translateY(${-(TREATMENTS.length + treatIdx)*48}px)`;
+
+  setTimeout(() => {
+    spinning = false;
+    const mut = MUTATIONS[mutIdx];
+    const age = AGES[ageIdx];
+    const treat = TREATMENTS[treatIdx];
+    const ideal = TREATMENT_MAP[mut];
+    const isMatch = ideal && ideal.treat === treat;
+    const resultEl = document.getElementById('spin-result');
+    const resultText = document.getElementById('spin-result-text');
+    resultEl.style.display = 'block';
+    if(isMatch) {
+      resultText.innerHTML = `✅ <span style="color:#06D6A0;font-weight:700">Match!</span> ${mut} → ${treat}. ${ideal.reason}`;
+      addXP(20, 'Treatment matched!');
+    } else {
+      resultText.innerHTML = `🔬 <span style="color:#00BBF9">${age} with ${mut}</span>: Best treatment is <strong style="color:#fff">${ideal ? ideal.treat : treat}</strong>. ${ideal ? ideal.reason : ''}`;
+      addXP(10, 'Spin completed!');
+    }
+    if(state.spinCount >= 5) {
+      document.getElementById('spin-btn').disabled = true;
+      document.getElementById('spin-btn').style.opacity = '0.5';
+    }
+  }, 1000);
+}
+
+// =================== SECTION 5: CRISPR ===================
+const CRISPR_COMPONENTS = [
+  {id:'cas9', name:'Cas9 Protein', desc:'The molecular scissors', color:'#3A86FF', icon:'scissors', slot:'cas9'},
+  {id:'guide', name:'Guide RNA', desc:'GPS to find the mutation', color:'#8338EC', icon:'target', slot:'guide'},
+  {id:'template', name:'Repair Template', desc:'Blueprint for healthy DNA', color:'#06D6A0', icon:'file-code', slot:'template'},
+];
+
+const ICONS = {
+  scissors: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg>`,
+  target: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+  'file-code': `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12.5 8 15l2 2.5"/><path d="m14 12.5 2 2.5-2 2.5"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/></svg>`,
+};
+
+function renderCrispr() {
+  // Slots
+  const slotsEl = document.getElementById('crispr-slots');
+  slotsEl.innerHTML = '';
+  CRISPR_COMPONENTS.forEach(comp => {
+    const placed = state.crisprPlaced[comp.id];
+    const slot = document.createElement('button');
+    slot.id = 'slot-' + comp.id;
+    slot.className = 'p-4 rounded-xl border-2 border-dashed text-center transition-all flex flex-col items-center justify-center';
+    slot.style.minHeight = '100px';
+    if(placed) {
+      slot.style.borderColor = comp.color;
+      slot.style.background = comp.color + '20';
+      slot.innerHTML = `<div style="color:${comp.color};margin-bottom:.5rem">${ICONS[comp.icon]}</div><p style="font-size:11px;color:${comp.color};font-weight:700">${comp.name}</p>`;
+    } else {
+      slot.style.borderColor = 'rgba(255,255,255,0.1)';
+      slot.style.background = 'rgba(31,33,51,0.5)';
+      slot.innerHTML = `<div class="w-8 h-8 rounded-full border-2 border-dashed mb-2" style="border-color:rgba(255,255,255,0.2)"></div><p style="font-size:10px;color:#64748b">Place ${comp.name}</p>`;
+    }
+    slot.onclick = () => placePiece(comp.id);
+    slotsEl.appendChild(slot);
+  });
+  // Pieces
+  const piecesEl = document.getElementById('crispr-pieces');
+  piecesEl.innerHTML = '';
+  CRISPR_COMPONENTS.forEach(comp => {
+    if(state.crisprPlaced[comp.id]) return;
+    const btn = document.createElement('button');
+    btn.id = 'piece-' + comp.id;
+    btn.className = 'flex items-center gap-2 px-4 py-3 rounded-xl border transition-all glass-card';
+    btn.style.borderColor = state.selectedCrisprPiece === comp.id ? comp.color : 'rgba(255,255,255,0.1)';
+    btn.style.color = comp.color;
+    btn.innerHTML = `${ICONS[comp.icon]}<span style="font-size:.875rem;font-weight:700;color:#fff">${comp.name}</span>`;
+    btn.onclick = () => selectPiece(comp.id);
+    piecesEl.appendChild(btn);
+  });
+}
+
+function selectPiece(id) {
+  state.selectedCrisprPiece = state.selectedCrisprPiece === id ? null : id;
+  renderCrispr();
+}
+
+function placePiece(slotId) {
+  if(!state.selectedCrisprPiece) { showToast('First select a component below!'); return; }
+  if(state.selectedCrisprPiece !== slotId) {
+    showToast('Wrong slot! This component belongs elsewhere.');
+    state.health = Math.max(0, state.health - 5);
+    updateHUD();
+    return;
+  }
+  state.crisprPlaced[slotId] = true;
+  state.selectedCrisprPiece = null;
+  addXP(15, CRISPR_COMPONENTS.find(c=>c.id===slotId).name + ' placed!');
+  renderCrispr();
+  // Check if all placed
+  if(Object.keys(state.crisprPlaced).length === 3) {
+    document.getElementById('crispr-result').style.display = 'block';
+    document.getElementById('dna-fixed').setAttribute('opacity','0.8');
+    addXP(25, 'CRISPR assembled!');
+  }
+}
+
+renderCrispr();
+
+// =================== SECTION 6: AI PREDICTION ===================
+const AI_SCENARIOS = [
+  {
+    q: 'Scenario 1/3: Who will maintain mobility longer?',
+    a: {
+      name:'Patient A', age:6, mutation:'Exon 51 deletion', treatment:'Exon skipping + steroids',
+      color:'rgba(6,214,160,0.25)'
+    },
+    b: {
+      name:'Patient B', age:6, mutation:'Large multi-exon deletion', treatment:'Steroids only',
+      color:'rgba(58,134,255,0.25)'
+    },
+    correct: 'a',
+    reason: 'Patient A has an exon-skippable mutation + targeted therapy, typically maintaining mobility 2-4 years longer.',
+  },
+  {
+    q: 'Scenario 2/3: Whose cardiac function will decline faster?',
+    a: { name:'Patient A', age:15, mutation:'Nonsense mutation', treatment:'Ataluren + steroids', color:'rgba(6,214,160,0.25)' },
+    b: { name:'Patient B', age:15, mutation:'Large deletion (exons 48-54)', treatment:'Corticosteroids only', color:'rgba(58,134,255,0.25)' },
+    correct: 'b',
+    reason: 'Large deletions correlate with faster cardiomyopathy progression. Patient B lacks mutation-specific treatment.',
+  },
+  {
+    q: 'Scenario 3/3: Who will respond better to gene therapy?',
+    a: { name:'Patient A', age:8, mutation:'Single exon deletion', treatment:'AAV micro-dystrophin (trial)', color:'rgba(6,214,160,0.25)' },
+    b: { name:'Patient B', age:8, mutation:'Multiple exon deletion', treatment:'Corticosteroids', color:'rgba(58,134,255,0.25)' },
+    correct: 'a',
+    reason: 'Smaller mutations and younger age at treatment generally predict better AAV gene therapy outcomes.',
+  },
+];
+
+function renderAIQuestion() {
+  const card = document.getElementById('ai-question-card');
+  const result = document.getElementById('ai-result');
+  result.style.display = 'none';
+  if(state.aiScenario >= AI_SCENARIOS.length) {
+    card.innerHTML = `<div class="text-center py-8">
+      <p class="text-xl font-black text-white mb-2">Challenge Complete!</p>
+      <p class="text-sm text-slate-400">You scored ${state.aiPlayerScore}/${AI_SCENARIOS.length} vs AI's ${state.aiAiScore}/${AI_SCENARIOS.length}</p>
+      <p class="text-sm font-bold mt-2 ${state.aiPlayerScore >= state.aiAiScore ? 'text-green' : 'text-pink'}">${state.aiPlayerScore >= state.aiAiScore ? '🏆 You beat the AI!' : '🤖 AI wins this round!'}</p>
+    </div>`;
+    return;
+  }
+  const s = AI_SCENARIOS[state.aiScenario];
+  const aiPredicts = s.correct; // AI is always right
+  card.innerHTML = `
+    <p class="text-center text-sm text-slate-400 mb-6">${s.q} <span class="text-white font-bold">Who will walk longer?</span></p>
+    <div class="grid sm\:grid-cols-2 gap-4">
+      ${['a','b'].map(k => {
+        const p = s[k];
+        return `<button onclick="aiPick('${k}')" class="w-full text-left p-5 rounded-2xl border-2 transition-all glass-card hover:border-blue cursor-pointer" style="border-color:rgba(255,255,255,0.1)">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:${p.color}">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div><p class="font-bold text-white text-sm">${p.name}</p><p class="text-xs text-slate-400">Age ${p.age}</p></div>
+          </div>
+          <div class="space-y-1\.5">
+            <div class="flex justify-between text-xs"><span class="text-slate-500">Mutation:</span><span class="text-slate-300 font-medium">${p.mutation}</span></div>
+            <div class="flex justify-between text-xs"><span class="text-slate-500">Treatment:</span><span class="text-cyan font-medium">${p.treatment}</span></div>
+          </div>
+        </button>`;
+      }).join('')}
+    </div>`;
+}
+
+function aiPick(choice) {
+  const s = AI_SCENARIOS[state.aiScenario];
+  const correct = choice === s.correct;
+  const aiCorrect = true; // AI always right (94% accuracy)
+  if(correct) { state.aiPlayerScore++; addXP(25,'Correct prediction!'); }
+  if(aiCorrect) state.aiAiScore++;
+  state.aiScenario++;
+  document.getElementById('ai-player-score').textContent = state.aiPlayerScore;
+  document.getElementById('ai-player-total').textContent = state.aiScenario;
+  document.getElementById('ai-ai-score').textContent = state.aiAiScore;
+  document.getElementById('ai-ai-total').textContent = state.aiScenario;
+  const result = document.getElementById('ai-result');
+  const resultText = document.getElementById('ai-result-text');
+  result.style.display = 'block';
+  resultText.innerHTML = correct
+    ? `✅ <span style="color:#06D6A0">Correct!</span> ${s.reason}`
+    : `❌ <span style="color:#FF006E">Incorrect.</span> ${s.reason}`;
+  setTimeout(renderAIQuestion, 2500);
+}
+
+renderAIQuestion();
+
+// =================== SECTION 7: BOSS BATTLE ===================
+const BOSS_QUESTIONS = [
+  {q:'What protein is absent in DMD patients?', opts:['Actin','Dystrophin','Myosin','Collagen'], ans:1},
+  {q:'DMD is inherited in what pattern?', opts:['Autosomal dominant','Autosomal recessive','X-linked recessive','Mitochondrial'], ans:2},
+  {q:'Approximately what fraction of boys are born with DMD?', opts:['1 in 400','1 in 4,000','1 in 40,000','1 in 400,000'], ans:1},
+  {q:'What is "Gower\'s Sign"?', opts:['A heart rhythm abnormality','Using hands to climb up legs when rising','Calf pseudo-hypertrophy','Toe-walking'], ans:1},
+  {q:'Which exon does eteplirsen (Exondys 51) skip?', opts:['Exon 50','Exon 51','Exon 53','Exon 44'], ans:1},
+  {q:'CRISPR-Cas9 uses which molecule to find the target DNA?', opts:['mRNA','Guide RNA','tRNA','siRNA'], ans:1},
+  {q:'What is the largest gene in the human genome?', opts:['BRCA1','CFTR','Dystrophin','Hemoglobin'], ans:2},
+  {q:'Which organ complication is the leading cause of death in DMD?', opts:['Liver failure','Kidney disease','Cardiomyopathy','Stroke'], ans:2},
+];
+
+function startBattle() {
+  state.bossActive = true;
+  state.bossHp = 8;
+  state.bossQuestion = 0;
+  document.getElementById('boss-intro').style.display = 'none';
+  document.getElementById('boss-arena').style.display = 'block';
+  renderBossQuestion();
+}
+
+function renderBossQuestion() {
+  if(state.bossQuestion >= BOSS_QUESTIONS.length) {
+    // All done
+    document.getElementById('boss-question-card').innerHTML = `
+      <div class="text-center py-8">
+        <p class="text-3xl font-black mb-4">${state.bossHp <= 0 ? '🏆 BOSS DEFEATED!' : '💪 Battle Complete!'}</p>
+        <p class="text-slate-300">You answered ${state.bossCorrect}/${BOSS_QUESTIONS.length} correctly!</p>
+        <p class="text-cyan font-bold mt-2">+${state.bossCorrect * 15} XP earned!</p>
+      </div>`;
+    addXP(state.bossCorrect * 15, 'Boss Battle complete!');
+    return;
+  }
+  const q = BOSS_QUESTIONS[state.bossQuestion];
+  document.getElementById('boss-question-card').innerHTML = `
+    <p class="text-sm text-slate-400 mb-4 text-center">Question ${state.bossQuestion+1}/${BOSS_QUESTIONS.length}</p>
+    <p class="text-lg font-bold text-white text-center mb-6">${q.q}</p>
+    <div class="grid grid-cols-2 gap-3">
+      ${q.opts.map((opt,i) => `
+        <button onclick="answerBoss(${i})" class="btn-3d p-4 rounded-xl text-sm font-bold text-white text-center transition-all glass-card hover:border-blue" style="border:1px solid rgba(255,255,255,0.15)">
+          ${opt}
+        </button>`).join('')}
+    </div>`;
+}
+
+function answerBoss(idx) {
+  const q = BOSS_QUESTIONS[state.bossQuestion];
+  const correct = idx === q.ans;
+  // Disable buttons
+  document.querySelectorAll('#boss-question-card button').forEach((b,i) => {
+    b.disabled = true;
+    if(i === q.ans) b.style.borderColor = '#06D6A0';
+    else if(i === idx && !correct) b.style.borderColor = '#FF006E';
+  });
+  if(correct) {
+    state.bossHp--;
+    state.bossCorrect++;
+    showToast('✅ Correct! Boss takes damage!');
+  } else {
+    state.health = Math.max(0, state.health - 10);
+    updateHUD();
+    showToast('❌ Wrong! You take damage!');
+  }
+  // Update boss HP
+  document.getElementById('boss-hp-text').textContent = Math.max(0,state.bossHp)+'/8';
+  document.getElementById('boss-hp-bar').style.width = (Math.max(0,state.bossHp)/8*100)+'%';
+  state.bossQuestion++;
+  setTimeout(renderBossQuestion, 1400);
+}
+
+// =================== CERTIFICATE ===================
+document.getElementById('gen-cert-btn').onclick = generateCertificate;
+document.getElementById('cert-name-input').addEventListener('input', function() {
+  const btn = document.getElementById('gen-cert-btn');
+  if(this.value.trim().length >= 2) {
+    btn.disabled = false;
+    btn.style.background = 'linear-gradient(90deg,#3A86FF,#8338EC)';
+    btn.style.cursor = 'pointer';
+  } else {
+    btn.disabled = true;
+    btn.style.background = '#475569';
+    btn.style.cursor = 'not-allowed';
+  }
+});
+
+function generateCertificate() {
+  const name = document.getElementById('cert-name-input').value.trim();
+  if(!name) return;
+  const lv = getLevel(state.xp);
+  document.getElementById('cert-hero-name').textContent = name;
+  document.getElementById('cert-xp-display').textContent = state.xp;
+  document.getElementById('cert-level-display').textContent = lv.name;
+  document.getElementById('certificate-output').style.display = 'block';
+  document.getElementById('certificate-output').scrollIntoView({behavior:'smooth'});
+  addXP(50, 'Certificate generated!');
+}
+
+// =================== INIT ===================
+updateHUD();
+</script>
+</body>
+</html>
